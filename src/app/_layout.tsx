@@ -9,6 +9,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import { useColorScheme } from "@/components/useColorScheme";
 
@@ -51,19 +52,21 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="law-project-details"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="politician-details"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="party-details" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <RootSiblingParent>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="law-project-details"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="politician-details"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="party-details" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </RootSiblingParent>
   );
 }

@@ -2,15 +2,19 @@ import { DefaultResponse } from "@/models/core.response";
 import { PropositionProps } from "@/models/propositions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+interface SaveFavoritePropositionPropsReturn extends DefaultResponse {
+  data: PropositionProps[];
+}
+
 async function saveFavoriteProposition(
   proposition: PropositionProps
-): Promise<DefaultResponse> {
+): Promise<SaveFavoritePropositionPropsReturn> {
   try {
     const propositionsInString = await AsyncStorage.getItem(
       "RNPropositions_favorites"
     );
 
-    const propositionsParsed = !!propositionsInString
+    const propositionsParsed: PropositionProps[] = !!propositionsInString
       ? JSON.parse(propositionsInString)
       : [];
 
@@ -28,19 +32,22 @@ async function saveFavoriteProposition(
 
       return {
         statusCode: 200,
-        message: "Proposição salva com sucesso na lista de favoritos!",
+        message: "Salvo na sua lista de favoritos!",
+        data: propositionsParsed,
       };
     }
 
     return {
       statusCode: 401,
       message: "Proposição já está inclusa na sua lista de proposições!",
+      data: propositionsParsed,
     };
   } catch (error: any) {
     return {
       statusCode: 500,
       message: "Falha ao salvar a proposição!",
       error,
+      data: [],
     };
   }
 }

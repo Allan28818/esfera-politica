@@ -5,10 +5,11 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   useColorScheme,
+  StyleSheet,
 } from "react-native";
 
 import { styles } from "./styles";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome, Fontisto, MaterialIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 
 interface PropositionCardProps extends TouchableOpacityProps {
@@ -16,10 +17,19 @@ interface PropositionCardProps extends TouchableOpacityProps {
   documentNumber: string | number;
   documentYear: string | number;
   summary: string;
+  onPressFavorite: () => void;
+  isFavorite: boolean;
 }
 
 const PropositionCard = (props: PropositionCardProps) => {
-  const { acronym, documentNumber, documentYear, summary } = props;
+  const {
+    acronym,
+    documentNumber,
+    documentYear,
+    summary,
+    onPressFavorite,
+    isFavorite,
+  } = props;
 
   const theme = useColorScheme();
   const colors = getColors(theme || "light");
@@ -49,9 +59,26 @@ const PropositionCard = (props: PropositionCardProps) => {
           </Text>
         </View>
       </View>
-      <Pressable style={styles.button}>
-        <MaterialIcons name="keyboard-arrow-right" style={styles.arrowIcon} />
-      </Pressable>
+      <View style={styles.actionsWrapper}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.favoriteButton}
+          hitSlop={{ top: 10, right: 10, bottom: 15, left: 10 }}
+          onPress={onPressFavorite}>
+          <Fontisto name="favorite" style={styles.favoriteIconOutline} />
+          {!isFavorite && (
+            <Fontisto
+              name="favorite"
+              size={18}
+              color={colors.background}
+              style={[styles.innerFavoriteIcon, StyleSheet.absoluteFill]}
+            />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.7} style={styles.arrowButton}>
+          <MaterialIcons name="keyboard-arrow-right" style={styles.arrowIcon} />
+        </TouchableOpacity>
+      </View>
     </TouchableOpacity>
   );
 };

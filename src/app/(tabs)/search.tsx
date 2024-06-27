@@ -17,7 +17,7 @@ export default function TabTwoScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar
         backgroundColor={colors.primaryColor}
         style={Platform.OS === "ios" ? "light" : "auto"}
@@ -30,7 +30,7 @@ export default function TabTwoScreen() {
         }}>
         <Text>Clica em mim</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

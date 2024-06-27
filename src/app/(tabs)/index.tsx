@@ -16,6 +16,10 @@ import { getPropositions } from "@/services/propositions/getPropositions";
 import { styles } from "@/styles/home";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { removePropositionFromFavoriteList } from "@/services/favoritePropositions/removePropositionFromFavoriteList";
+import Toast from "react-native-root-toast";
+import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFavoriteProposition";
 
 export default function Home() {
   const router = useRouter();
@@ -24,6 +28,10 @@ export default function Home() {
   const colors = getColors(theme || "light");
 
   const [propositions, setPropositions] = useState<PropositionProps[]>([]);
+  const [favoritePropositions, setFavoritePropositions] = useState<
+    PropositionProps[]
+  >([]);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,8 +42,43 @@ export default function Home() {
       setPropositions(propositionsResponse.data.dados);
       setLoading(false);
     };
+
+    const handleSetFavoritePropositions = async () => {
+      const favoritePropositions = await AsyncStorage.getItem(
+        "RNPropositions_favorites"
+      );
+      const favoritePropositionsParsed = !!favoritePropositions
+        ? JSON.parse(favoritePropositions)
+        : [];
+
+      setFavoritePropositions(favoritePropositionsParsed);
+    };
     handleGetPropositions();
+    handleSetFavoritePropositions();
   }, []);
+
+  async function handleFavoriteProposition(proposition: PropositionProps) {
+    const isFavoriteProposition =
+      favoritePropositions.findIndex(
+        (currentProposition) => currentProposition.id === proposition.id
+      ) !== -1;
+
+    let response;
+
+    if (isFavoriteProposition) {
+      response = await removePropositionFromFavoriteList(proposition);
+    } else {
+      response = await saveFavoriteProposition(proposition);
+    }
+
+    Toast.show(response.message, { duration: Toast.durations.LONG });
+
+    if (!!response.error) {
+      return;
+    }
+
+    setFavoritePropositions(response.data);
+  }
 
   if (loading) {
     return <ActivityIndicator color={colors.primaryColor} />;
@@ -64,8 +107,20 @@ export default function Home() {
             documentNumber={proposition.item.numero}
             documentYear={proposition.item.ano}
             summary={proposition.item.ementa}
+            isFavorite={
+              favoritePropositions.findIndex(
+                (currentProposition) =>
+                  currentProposition.id === proposition.item.id
+              ) !== -1
+            }
+            onPressFavorite={() => handleFavoriteProposition(proposition.item)}
             onPress={() => {
-              router.navigate("law-project-details");
+              router.navigate({
+                pathname: "law-project-details",
+                params: {
+                  propositionId: proposition.item.id,
+                },
+              });
             }}
           />
         )}

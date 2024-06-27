@@ -47,13 +47,38 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.FredokaRegular,
     marginLeft: 50,
   },
-  button: {
+  actionsWrapper: {
     margin: "auto",
-    width: "10%",
+    width: "auto",
+    height: "100%",
+    alignItems: "flex-end",
+    paddingRight: 10,
+  },
+  favoriteButton: {
+    height: 30,
+    width: 30,
+    flexDirection: "row",
+    alignSelf: "flex-end",
+  },
+  favoriteIconOutline: {
+    color: colors.tertiaryColor,
+    fontSize: 24,
+  },
+  innerFavoriteIcon: {
+    marginLeft: 1.35,
+    marginTop: 1.5,
+  },
+  arrowButton: {
+    height: 30,
+    width: 30,
+    marginTop: "50%",
   },
   arrowIcon: {
     fontSize: 24,
     color: colors.tertiaryColor,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

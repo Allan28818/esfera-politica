@@ -22,13 +22,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontSize: 16,
   },
-  separator: {
-    width: "90%",
-    height: 1,
-    backgroundColor: colors.primaryColor,
-    borderRadius: 20,
-    margin: "auto",
-  },
+
   propositionsList: {
     marginBottom: 75,
   },

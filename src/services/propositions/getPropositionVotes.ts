@@ -5,7 +5,7 @@ import { LinkProps } from "@/models/links";
 import { PropositionWithVotingProps } from "@/models/propositions";
 
 interface DataProps {
-  dados: PropositionWithVotingProps;
+  dados: PropositionWithVotingProps[];
   links: LinkProps[];
 }
 

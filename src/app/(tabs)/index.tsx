@@ -1,25 +1,26 @@
 import { StatusBar } from "expo-status-bar";
 import {
-  ActivityIndicator,
   FlatList,
   Platform,
   TouchableOpacity,
   useColorScheme,
 } from "react-native";
 
-import { SafeAreaView, Text, View, getColors } from "@/components/Themed";
+import { SafeAreaView, Text, getColors } from "@/components/Themed";
 
 import { PropositionCard } from "@/components/Cards/PropositionCard";
 import { DefaultHeader } from "@/components/Headers/DefaultHeader";
+import { DefaultLoader } from "@/components/Loaders/DefaultLoader";
+import { DefaultSeparator } from "@/components/Separators/DefaultSeparator";
 import { PropositionProps } from "@/models/propositions";
+import { removePropositionFromFavoriteList } from "@/services/favoritePropositions/removePropositionFromFavoriteList";
+import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFavoriteProposition";
 import { getPropositions } from "@/services/propositions/getPropositions";
 import { styles } from "@/styles/home";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { removePropositionFromFavoriteList } from "@/services/favoritePropositions/removePropositionFromFavoriteList";
 import Toast from "react-native-root-toast";
-import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFavoriteProposition";
 
 export default function Home() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function Home() {
   }
 
   if (loading) {
-    return <ActivityIndicator color={colors.primaryColor} />;
+    return <DefaultLoader />;
   }
 
   return (
@@ -99,7 +100,7 @@ export default function Home() {
       <FlatList
         style={styles.propositionsList}
         data={propositions}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={() => <DefaultSeparator />}
         renderItem={(proposition) => (
           <PropositionCard
             key={proposition.item.id}

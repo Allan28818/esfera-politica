@@ -35,7 +35,10 @@ const PropositionCard = (props: PropositionCardProps) => {
   const colors = getColors(theme || "light");
 
   return (
-    <TouchableOpacity {...props} style={styles.cardWrapper} activeOpacity={0.7}>
+    <TouchableOpacity
+      {...props}
+      style={[styles.cardWrapper, props.style]}
+      activeOpacity={0.7}>
       <View>
         <View style={styles.topInfoWrapper}>
           <FontAwesome

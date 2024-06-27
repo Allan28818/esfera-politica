@@ -1,22 +1,36 @@
-import { Platform, StyleSheet, useColorScheme } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import { SafeAreaView, Text, View, getColors } from "@/components/Themed";
 import { DefaultHeader } from "@/components/Headers/DefaultHeader";
+import { useRouter } from "expo-router";
 
 export default function TabTwoScreen() {
   const theme = useColorScheme();
   const colors = getColors(theme || "light");
 
+  const router = useRouter();
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar
         backgroundColor={colors.primaryColor}
         style={Platform.OS === "ios" ? "light" : "auto"}
       />
       <DefaultHeader />
       <Text style={styles.title}>Pesquisa</Text>
-    </SafeAreaView>
+      <TouchableOpacity
+        onPress={() => {
+          router.navigate("politician-details");
+        }}>
+        <Text>Clica em mim</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 

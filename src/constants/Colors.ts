@@ -16,6 +16,7 @@ export default {
   },
   dark: {
     text: "#ECF0F1",
+    textSecondary: "#E2E2E2",
     background: "#2D3436",
     foreground: "#434D50",
     tint: "#27AE60",

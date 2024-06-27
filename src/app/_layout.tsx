@@ -22,7 +22,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    FredokaLight: require("../assets/fonts/Fredoka-Light.ttf"),
+    FredokaRegular: require("../assets/fonts/Fredoka-Regular.ttf"),
+    FredokaMedium: require("../assets/fonts/Fredoka-Medium.ttf"),
+    FredokaSemiBold: require("../assets/fonts/Fredoka-SemiBold.ttf"),
+    FredokaBold: require("../assets/fonts/Fredoka-Bold.ttf"),
     ...FontAwesome.font,
   });
 
@@ -50,7 +54,6 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         <Stack.Screen
           name="law-project-details"
           options={{ headerShown: false }}

@@ -1,6 +1,7 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet, useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
-import { View } from "@/components/Themed";
+import { SafeAreaView, Text, getColors } from "@/components/Themed";
 
 import { getProposition } from "@/services/propositions/getProposition";
 import { getPropositions } from "@/services/propositions/getPropositions";
@@ -13,8 +14,12 @@ import { getPolitician } from "@/services/politicians/getPolitician";
 import { getPoliticalParties } from "@/services/politicalParties/getPoliticalParties";
 import { getPoliticalParty } from "@/services/politicalParties/getPoliticalParty";
 import { getPoliticalPartyMembers } from "@/services/politicalParties/getPoliticalPartyMembers";
+import { DefaultHeader } from "@/components/Headers/DefaultHeader";
 
 export default function Home() {
+  const theme = useColorScheme();
+  const colors = getColors(theme || "light");
+
   useEffect(() => {
     const handleGetPropositions = async () => {
       const propositionsResponse = await getPropositions();
@@ -49,7 +54,15 @@ export default function Home() {
     handleGetPropositions();
   }, []);
 
-  return <View style={styles.container}></View>;
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor={colors.primaryColor}
+        style={Platform.OS === "ios" ? "light" : "auto"}
+      />
+      <DefaultHeader />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -66,8 +79,6 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   title: {
     backgroundColor: "white",

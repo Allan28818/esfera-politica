@@ -297,6 +297,12 @@ export default function Search() {
                 ) !== -1
               }
               onPressFavorite={() => handleFavoriteProposition(item)}
+              onPress={() =>
+                router.navigate({
+                  pathname: "law-project-details",
+                  params: { propositionId: item.id },
+                })
+              }
               summary={item.ementa}
             />
           )}

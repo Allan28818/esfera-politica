@@ -2,10 +2,10 @@ import axios from "axios";
 
 import { DefaultResponse } from "@/models/core.response";
 import { LinkProps } from "@/models/links";
-import { PoliticalPartyProps } from "@/models/politicalParties";
+import { DetailedPoliticalPartyProps } from "@/models/politicalParties";
 
 interface DataProps {
-  dados: PoliticalPartyProps[];
+  dados: DetailedPoliticalPartyProps;
   links: LinkProps[];
 }
 
@@ -14,7 +14,7 @@ interface GetPoliticalPartyResProps extends DefaultResponse {
 }
 
 async function getPoliticalParty(
-  politicalPartyId: string | number
+  politicalPartyId: string
 ): Promise<GetPoliticalPartyResProps> {
   try {
     const response = await axios.get(

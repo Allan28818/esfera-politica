@@ -15,6 +15,7 @@ export default {
     tertiaryColor: "#3498DB",
     lightBlue: "#90C4E5",
     white: "#FFFFFF",
+    shadow: "#171717",
     red: "#E74C3C",
   },
   dark: {
@@ -30,6 +31,7 @@ export default {
     tertiaryColor: "#3498DB",
     lightBlue: "#90C4E5",
     white: "#FFFFFF",
+    shadow: "#171717",
     red: "#E74C3C",
   },
 };

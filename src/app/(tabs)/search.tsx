@@ -27,6 +27,8 @@ import { PropositionCard } from "@/components/Cards/PropositionCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { removePropositionFromFavoriteList } from "@/services/favoritePropositions/removePropositionFromFavoriteList";
 import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFavoriteProposition";
+import { deepSearch } from "@/utils/deepSearch";
+import { DefaultLoader } from "@/components/Loaders/DefaultLoader";
 
 const placeholderOptions = {
   parties: "Buscar por partidos políticos",
@@ -68,7 +70,6 @@ export default function Search() {
     };
     const handleGetPoliticians = async () => {
       const response = await getPoliticians({ items: 50, page: 1 });
-      console.log("response", response);
       if (!!response.error) {
         Toast.show(response.message, { duration: Toast.durations.LONG });
       }
@@ -121,6 +122,10 @@ export default function Search() {
     }
 
     setFavoritePropositions(response.data);
+  }
+
+  if (loading) {
+    return <DefaultLoader />;
   }
 
   return (
@@ -217,7 +222,11 @@ export default function Search() {
       {currentTab === "parties" && (
         <FlatList
           style={styles.list}
-          data={politicalParties}
+          data={politicalParties.filter((politicalParty) => {
+            const stringToAnalyze = `${politicalParty.id} ${politicalParty.nome} ${politicalParty.sigla} ${politicalParty.uri}`;
+
+            return deepSearch({ searchTerm, stringToAnalyze });
+          })}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <PoliticalPartyCard
@@ -241,7 +250,11 @@ export default function Search() {
       {currentTab === "politicians" && (
         <FlatList
           style={styles.list}
-          data={politicians}
+          data={politicians.filter((politician) => {
+            const stringToAnalyze = `${politician.id} ${politician.email} ${politician.idLegislatura} ${politician.nome} ${politician.siglaPartido} ${politician.siglaUf} ${politician.uri} ${politician.uriPartido} ${politician.urlFoto}`;
+
+            return deepSearch({ searchTerm, stringToAnalyze });
+          })}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <PoliticianCard
@@ -267,7 +280,11 @@ export default function Search() {
       {currentTab === "propositions" && (
         <FlatList
           style={styles.list}
-          data={propositions}
+          data={propositions.filter((proposition) => {
+            const stringToAnalyze = `${proposition.ano} ${proposition.codTipo} ${proposition.ementa} ${proposition.id} ${proposition.numero} ${proposition.siglaTipo} ${proposition.uri}`;
+
+            return deepSearch({ searchTerm, stringToAnalyze });
+          })}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <PropositionCard

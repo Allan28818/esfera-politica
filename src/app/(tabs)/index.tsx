@@ -18,8 +18,8 @@ import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFav
 import { getPropositions } from "@/services/propositions/getPropositions";
 import { styles } from "@/styles/home";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-root-toast";
 
 export default function Home() {
@@ -44,19 +44,26 @@ export default function Home() {
       setLoading(false);
     };
 
-    const handleSetFavoritePropositions = async () => {
-      const favoritePropositions = await AsyncStorage.getItem(
-        "RNPropositions_favorites"
-      );
-      const favoritePropositionsParsed = !!favoritePropositions
-        ? JSON.parse(favoritePropositions)
-        : [];
-
-      setFavoritePropositions(favoritePropositionsParsed);
-    };
     handleGetPropositions();
-    handleSetFavoritePropositions();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleSetFavoritePropositions = async () => {
+        setLoading(true);
+        const favoritePropositions = await AsyncStorage.getItem(
+          "RNPropositions_favorites"
+        );
+        const favoritePropositionsParsed = !!favoritePropositions
+          ? JSON.parse(favoritePropositions)
+          : [];
+
+        setFavoritePropositions(favoritePropositionsParsed);
+        setLoading(false);
+      };
+      handleSetFavoritePropositions();
+    }, [])
+  );
 
   async function handleFavoriteProposition(proposition: PropositionProps) {
     const isFavoriteProposition =

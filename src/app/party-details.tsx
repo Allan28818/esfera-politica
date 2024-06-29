@@ -36,45 +36,47 @@ export default function PartyDetails() {
   const colors = getColors(theme || "light");
 
   useEffect(() => {
-    const handleGetPoliticalParty = async () => {
+    const handleConfigPage = async () => {
       setLoading(true);
-      const response = await getPoliticalParty(
+      const politicalPartyResponse = await getPoliticalParty(
         pageParams.politicalPartyId?.toString() || ""
       );
 
-      if (!!response.error) {
-        Toast.show(response.message, { duration: Toast.durations.LONG });
-      }
-      setPagePoliticalParty(response.data.dados);
-    };
-    const handlePartyMembers = async () => {
-      setLoading(true);
-      const response = await getPoliticalPartyMembers(
+      const politicalPartyMembersResponse = await getPoliticalPartyMembers(
         pageParams.politicalPartyId?.toString() || ""
       );
 
-      if (!!response.error) {
-        Toast.show(response.message, { duration: Toast.durations.LONG });
-      }
-      setPartyMembers(response.data.dados);
-      setLoading(false);
-    };
-    const handleGetLeader = async () => {
-      setLoading(true);
-      const response = await getPolitician(
-        /\/(\d+)$/.exec(pagePoliticalParty?.status.lider.uri || "")?.[1] || ""
+      const politicianResponse = await getPolitician(
+        /\/(\d+)$/.exec(
+          politicalPartyResponse?.data?.dados.status.lider.uri || ""
+        )?.[1] || ""
       );
 
-      if (!!response.error) {
-        Toast.show(response.message, { duration: Toast.durations.LONG });
+      if (!!politicalPartyResponse.error) {
+        Toast.show(politicalPartyResponse.message, {
+          duration: Toast.durations.LONG,
+        });
       }
-      setPartyLeader(response.data.dados);
+
+      if (!!politicianResponse.error) {
+        Toast.show(politicianResponse.message, {
+          duration: Toast.durations.LONG,
+        });
+      }
+
+      if (!!politicalPartyMembersResponse.error) {
+        Toast.show(politicalPartyMembersResponse.message, {
+          duration: Toast.durations.LONG,
+        });
+      }
+
+      setPagePoliticalParty(politicalPartyResponse.data.dados);
+      setPartyMembers(politicalPartyMembersResponse.data.dados);
+      setPartyLeader(politicianResponse.data.dados);
       setLoading(false);
     };
 
-    handleGetPoliticalParty();
-    handlePartyMembers();
-    handleGetLeader();
+    handleConfigPage();
   }, []);
 
   if (loading) {

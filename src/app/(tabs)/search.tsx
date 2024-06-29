@@ -14,7 +14,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PropositionProps } from "@/models/propositions";
 import { PoliticianProps } from "@/models/politicians";
 import { PoliticalPartyProps } from "@/models/politicalParties";
-import { SearchInput } from "@/components/Inputs/SerachInput";
+import { SearchInput } from "@/components/Inputs/SearchInput";
 import { styles } from "@/styles/search";
 import { getPoliticalParties } from "@/services/politicalParties/getPoliticalParties";
 import Toast from "react-native-root-toast";

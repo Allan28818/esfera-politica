@@ -8,11 +8,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  sectionButtonsWrapper: {
+  tabSelectorsWrapper: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginTop: 23,
   },
+
   sectionButton: {
     marginTop: 20,
     marginLeft: 10,
@@ -21,10 +22,35 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.FredokaRegular,
     textTransform: "uppercase",
     fontSize: 16,
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent",
   },
-
+  sectionTabActive: {
+    borderBottomWidth: 2,
+    borderBottomColor: colors.primaryColor,
+  },
+  changeKeywordsLinkWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 17,
+    marginBottom: 26,
+  },
+  changeKeywordsLink: {
+    textDecorationLine: "underline",
+    color: colors.primaryColor,
+  },
   propositionsList: {
     marginBottom: 75,
+  },
+  section: {
+    marginBottom: 21,
+  },
+  sectionTitle: {
+    fontFamily: Fonts.FredokaMedium,
+    fontSize: 16,
+    marginLeft: 30,
+    marginBottom: 5,
+    color: colors.primaryColor,
   },
 });
 

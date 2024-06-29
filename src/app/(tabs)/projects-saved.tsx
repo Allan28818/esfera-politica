@@ -1,23 +1,23 @@
-import { FlatList, Platform, StyleSheet, useColorScheme } from "react-native";
+import { FlatList, Platform, useColorScheme } from "react-native";
 
 import { StatusBar } from "expo-status-bar";
 
-import { SafeAreaView, Text, View, getColors } from "@/components/Themed";
-import { DefaultHeader } from "@/components/Headers/DefaultHeader";
-import { styles } from "@/styles/projects-saved";
-import { useCallback, useEffect, useState } from "react";
-import { SearchInput } from "@/components/Inputs/SerachInput";
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useFocusEffect, useRouter } from "expo-router";
-import { PropositionProps } from "@/models/propositions";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DefaultLoader } from "@/components/Loaders/DefaultLoader";
-import { deepSearch } from "@/utils/deepSearch";
 import { PropositionCard } from "@/components/Cards/PropositionCard";
+import { DefaultHeader } from "@/components/Headers/DefaultHeader";
+import { SearchInput } from "@/components/Inputs/SearchInput";
+import { DefaultLoader } from "@/components/Loaders/DefaultLoader";
+import { SafeAreaView, Text, View, getColors } from "@/components/Themed";
+import { PropositionProps } from "@/models/propositions";
 import { removePropositionFromFavoriteList } from "@/services/favoritePropositions/removePropositionFromFavoriteList";
 import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFavoriteProposition";
-import Toast from "react-native-root-toast";
+import { styles } from "@/styles/projects-saved";
+import { deepSearch } from "@/utils/deepSearch";
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
+import { Link, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import Toast from "react-native-root-toast";
 
 export default function ProjectsSaved() {
   const router = useRoute();
@@ -131,6 +131,7 @@ export default function ProjectsSaved() {
               documentYear={item.ano}
               isFavorite={true}
               onPressFavorite={() => handleFavoriteProposition(item)}
+              secondaryIndicator="ACESSAR"
             />
           )}
         />

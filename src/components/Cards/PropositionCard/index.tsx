@@ -18,6 +18,7 @@ interface PropositionCardProps extends TouchableOpacityProps {
   documentYear: string | number;
   summary: string;
   onPressFavorite: () => void;
+  secondaryIndicator?: string;
   isFavorite: boolean;
 }
 
@@ -29,6 +30,7 @@ const PropositionCard = (props: PropositionCardProps) => {
     summary,
     onPressFavorite,
     isFavorite,
+    secondaryIndicator,
   } = props;
 
   const theme = useColorScheme();
@@ -55,11 +57,30 @@ const PropositionCard = (props: PropositionCardProps) => {
         <Text style={styles.summary} numberOfLines={3}>
           {summary}
         </Text>
-        <View style={styles.creationCard}>
-          <Text style={styles.creationText}>
-            criação{" "}
-            <Text style={styles.creationTextBigger}>{documentYear}</Text>
-          </Text>
+        <View
+          style={[
+            styles.complementaryInfoWrapper,
+            !!secondaryIndicator
+              ? { justifyContent: "space-around" }
+              : { justifyContent: "flex-start" },
+          ]}>
+          <View style={styles.complementaryInfoCard}>
+            <Text style={styles.complementaryText}>
+              criação{" "}
+              <Text style={styles.complementaryTextBigger}>{documentYear}</Text>
+            </Text>
+          </View>
+          {!!secondaryIndicator && (
+            <View style={styles.complementaryInfoCard}>
+              <Text style={styles.complementaryText}>
+                {secondaryIndicator}
+                <MaterialIcons
+                  name="keyboard-arrow-right"
+                  style={styles.complementaryInfoIcon}
+                />
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.actionsWrapper}>

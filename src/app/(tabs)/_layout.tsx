@@ -6,7 +6,12 @@ import { Pressable, StyleSheet, View } from "react-native";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
-import { AntDesign, Entypo, Fontisto } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  Fontisto,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -55,6 +60,26 @@ export default function TabLayout() {
         }}
       />
 
+      <Tabs.Screen
+        name="add-keywords"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <MaterialCommunityIcons
+                name="text-box-plus"
+                size={24}
+                color={color}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name="text-box-plus-outline"
+                size={24}
+                color={color}
+              />
+            ),
+        }}
+      />
       <Tabs.Screen
         name="projects-saved"
         options={{

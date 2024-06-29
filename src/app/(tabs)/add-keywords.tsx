@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import {
-  FlatList,
   Platform,
   ScrollView,
   TouchableOpacity,
@@ -10,25 +9,26 @@ import {
 
 import { SafeAreaView, Text, getColors } from "@/components/Themed";
 
+import { DashedCard } from "@/components/Cards/DashedCard";
 import { PropositionCard } from "@/components/Cards/PropositionCard";
 import { DefaultHeader } from "@/components/Headers/DefaultHeader";
+import { KeywordsInput } from "@/components/Inputs/KeywordsInput";
 import { DefaultLoader } from "@/components/Loaders/DefaultLoader";
-import { DefaultSeparator } from "@/components/Separators/DefaultSeparator";
 import { PropositionProps } from "@/models/propositions";
 import { removePropositionFromFavoriteList } from "@/services/favoritePropositions/removePropositionFromFavoriteList";
 import { saveFavoriteProposition } from "@/services/favoritePropositions/saveFavoriteProposition";
+import { removeKeyword } from "@/services/keywords/removeKeyword";
+import { saveKeyword } from "@/services/keywords/saveKeyword";
 import { getPropositions } from "@/services/propositions/getPropositions";
-import { styles } from "@/styles/home";
+import { styles } from "@/styles/add-keyword";
+import { deepSearch } from "@/utils/deepSearch";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-root-toast";
-import { DashedCard } from "@/components/Cards/DashedCard";
-import { deepSearch } from "@/utils/deepSearch";
 
-export default function Home() {
-  const router = useRouter();
-
+export default function AddKeywords() {
   const theme = useColorScheme();
   const colors = getColors(theme || "light");
 
@@ -37,11 +37,9 @@ export default function Home() {
     PropositionProps[]
   >([]);
 
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywordInput, setKeywordInput] = useState<string>("");
 
-  const [currentTab, setCurrentTab] = useState<
-    "target-propositions" | "all-propositions"
-  >("target-propositions");
+  const [keywords, setKeywords] = useState<string[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -50,6 +48,11 @@ export default function Home() {
       setLoading(true);
       const propositionsResponse = await getPropositions();
 
+      if (!!propositionsResponse.error) {
+        Toast.show(propositionsResponse.message, {
+          duration: Toast.durations.LONG,
+        });
+      }
       setPropositions(propositionsResponse.data.dados);
     };
 
@@ -63,10 +66,10 @@ export default function Home() {
 
       setLoading(false);
     };
+
     handleGetPropositions();
     handleSetKeywords();
   }, []);
-  console.log("currenttab", currentTab);
 
   useFocusEffect(
     useCallback(() => {
@@ -109,6 +112,33 @@ export default function Home() {
     setFavoritePropositions(response.data);
   }
 
+  async function handleAddKeyword(keyword: string) {
+    const addKeywordResponse = await saveKeyword(keyword);
+
+    if (addKeywordResponse.error) {
+      Toast.show(addKeywordResponse.message, {
+        duration: Toast.durations.LONG,
+      });
+      return;
+    }
+    setKeywords(addKeywordResponse.data);
+    setKeywordInput("");
+  }
+  async function handleRemoveKeyword(keyword: string) {
+    const removeKeywordResponse = await removeKeyword(keyword);
+
+    if (removeKeywordResponse.error) {
+      Toast.show(removeKeywordResponse.message, {
+        duration: Toast.durations.LONG,
+      });
+      return;
+    }
+    Toast.show(removeKeywordResponse.message, {
+      duration: Toast.durations.LONG,
+    });
+    setKeywords(removeKeywordResponse.data);
+  }
+
   if (loading) {
     return <DefaultLoader />;
   }
@@ -120,37 +150,46 @@ export default function Home() {
         style={Platform.OS === "ios" ? "light" : "auto"}
       />
       <DefaultHeader />
-
-      <View style={styles.tabSelectorsWrapper}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={[
-            styles.sectionButton,
-            currentTab === "target-propositions" && styles.sectionTabActive,
-          ]}
-          onPress={() => setCurrentTab("target-propositions")}>
-          <Text style={styles.sectionButtonText}>Projetos em observação</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={[
-            styles.sectionButton,
-            currentTab === "all-propositions" && styles.sectionTabActive,
-          ]}
-          onPress={() => setCurrentTab("all-propositions")}>
-          <Text style={styles.sectionButtonText}>Projetos de lei</Text>
-        </TouchableOpacity>
-      </View>
-      {currentTab === "target-propositions" && (
-        <View style={styles.changeKeywordsLinkWrapper}>
-          <Link href={"add-keywords"}>
-            <Text style={styles.changeKeywordsLink}>
-              Alterar palavras-chave
-            </Text>
-          </Link>
+      <View style={styles.inputWrapper}>
+        <KeywordsInput
+          handleAddKeyword={handleAddKeyword}
+          onChangeText={(text) => setKeywordInput(text)}
+          placeholder="Digite palavras chave para receber alertas"
+          value={keywordInput}
+        />
+        <View style={styles.keywordsWrapper}>
+          {keywords.map((keyword) => (
+            <View key={keyword} style={styles.keywordWrapper}>
+              <Text style={styles.keywordText}>
+                {keyword[0].toLocaleUpperCase() + keyword.slice(1)}
+              </Text>
+              <TouchableOpacity
+                onPress={() => handleRemoveKeyword(keyword)}
+                style={styles.removeKeywordsButton}>
+                <AntDesign name="close" style={styles.removeKeywordIcon} />
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
-      )}
-      {currentTab === "target-propositions" && (
+      </View>
+
+      {!loading && !keywords.length ? (
+        <View style={styles.noContentWrapper}>
+          <View style={styles.noContentIconWrapper}>
+            <MaterialCommunityIcons
+              name="bell-ring"
+              style={[styles.noContentIcon, { color: colors.text }]}
+            />
+          </View>
+          <Text style={styles.noDocumentTitle}>
+            Você ainda não tem palavras-chave
+          </Text>
+          <Text style={styles.noDocumentDescription}>
+            Adicione palavras chave para receber alertas sobre projeto de lei
+            relacionados...
+          </Text>
+        </View>
+      ) : (
         <ScrollView style={styles.propositionsList}>
           {keywords.map((keyword) => {
             const filteredPropositions = propositions.filter((proposition) => {
@@ -161,7 +200,11 @@ export default function Home() {
 
             return (
               <View key={keyword} style={styles.section}>
-                <Text style={[styles.sectionTitle]}>
+                <Text
+                  style={[
+                    styles.sectionTitle,
+                    { color: colors.textSecondary },
+                  ]}>
                   {keyword[0].toLocaleUpperCase() + keyword.slice(1)}
                 </Text>
                 {filteredPropositions.length === 0 ? (
@@ -192,40 +235,6 @@ export default function Home() {
             );
           })}
         </ScrollView>
-      )}
-
-      {currentTab === "all-propositions" && (
-        <FlatList
-          style={styles.propositionsList}
-          data={propositions}
-          ItemSeparatorComponent={() => <DefaultSeparator />}
-          renderItem={(proposition) => (
-            <PropositionCard
-              key={proposition.item.id}
-              acronym={proposition.item.siglaTipo}
-              documentNumber={proposition.item.numero}
-              documentYear={proposition.item.ano}
-              summary={proposition.item.ementa}
-              isFavorite={
-                favoritePropositions.findIndex(
-                  (currentProposition) =>
-                    currentProposition.id === proposition.item.id
-                ) !== -1
-              }
-              onPressFavorite={() =>
-                handleFavoriteProposition(proposition.item)
-              }
-              onPress={() => {
-                router.navigate({
-                  pathname: "law-project-details",
-                  params: {
-                    propositionId: proposition.item.id,
-                  },
-                });
-              }}
-            />
-          )}
-        />
       )}
     </SafeAreaView>
   );

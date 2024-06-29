@@ -18,6 +18,7 @@ export default {
     black: "#000000",
     shadow: "#171717",
     red: "#E74C3C",
+    disabled: "#BBBBBB",
   },
   dark: {
     text: "#F0F0F0",
@@ -35,5 +36,6 @@ export default {
     black: "#000000",
     shadow: "#171717",
     red: "#E74C3C",
+    disabled: "#545F63",
   },
 };

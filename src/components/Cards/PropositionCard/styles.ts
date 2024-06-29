@@ -28,24 +28,35 @@ const styles = StyleSheet.create({
     marginTop: 11,
     paddingRight: 20,
   },
-  creationCard: {
+  complementaryInfoWrapper: {
+    flexDirection: "row",
+  },
+  complementaryInfoCard: {
     height: "auto",
     width: 120,
     paddingVertical: 4,
     borderRadius: 20,
     backgroundColor: colors.tertiaryColor,
     marginTop: 11,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    alignContent: "center",
   },
-  creationText: {
+  complementaryText: {
     textAlign: "center",
     fontFamily: Fonts.FredokaBold,
     fontSize: 10,
     marginRight: 5,
+    textAlignVertical: "center",
   },
-  creationTextBigger: {
+  complementaryTextBigger: {
     fontSize: 13,
     fontFamily: Fonts.FredokaRegular,
     marginLeft: 50,
+  },
+  complementaryInfoIcon: {
+    fontSize: 20,
   },
   actionsWrapper: {
     margin: "auto",

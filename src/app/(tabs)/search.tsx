@@ -9,8 +9,8 @@ import { StatusBar } from "expo-status-bar";
 
 import { SafeAreaView, Text, View, getColors } from "@/components/Themed";
 import { DefaultHeader } from "@/components/Headers/DefaultHeader";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { PropositionProps } from "@/models/propositions";
 import { PoliticianProps } from "@/models/politicians";
 import { PoliticalPartyProps } from "@/models/politicalParties";
@@ -37,6 +37,10 @@ const placeholderOptions = {
 };
 
 export default function Search() {
+  const pageParams = useLocalSearchParams<{
+    currentTab: "parties" | "politicians" | "propositions";
+  }>();
+
   const theme = useColorScheme();
   const colors = getColors(theme || "light");
 
@@ -75,16 +79,7 @@ export default function Search() {
       }
       setPoliticians(response.data.dados);
     };
-    const handleSetFavoritePropositions = async () => {
-      const favoritePropositions = await AsyncStorage.getItem(
-        "RNPropositions_favorites"
-      );
-      const favoritePropositionsParsed = !!favoritePropositions
-        ? JSON.parse(favoritePropositions)
-        : [];
 
-      setFavoritePropositions(favoritePropositionsParsed);
-    };
     const handleGetPropositions = async () => {
       const response = await getPropositions();
 
@@ -97,9 +92,28 @@ export default function Search() {
 
     handleGetPoliticalParties();
     handleGetPoliticians();
-    handleSetFavoritePropositions();
     handleGetPropositions();
   }, []);
+
+  useEffect(() => {
+    setCurrentTab(pageParams.currentTab || "parties");
+  }, [pageParams.currentTab]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleSetFavoritePropositions = async () => {
+        const favoritePropositions = await AsyncStorage.getItem(
+          "RNPropositions_favorites"
+        );
+        const favoritePropositionsParsed = !!favoritePropositions
+          ? JSON.parse(favoritePropositions)
+          : [];
+
+        setFavoritePropositions(favoritePropositionsParsed);
+      };
+      handleSetFavoritePropositions();
+    }, [])
+  );
 
   async function handleFavoriteProposition(proposition: PropositionProps) {
     const isFavoriteProposition =
